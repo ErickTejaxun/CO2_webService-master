@@ -224,39 +224,101 @@ app.get('/analisis', function(req, res, next) {
       if (err) throw err;
       db.collection("aires").find({}, { _id: false }).toArray(function(err, result) {
         if (err) throw err;
+          var horaMinima = "";
+          var horaMaxima = "";
+          var cantidadMaxima = 0;
+          var cantidadMinima = 0;
+          var latitudActual = 0;
+          var altitudActual = 0;
+          var sumatoria = 1;
+          var concurrencia = 1;
+          var promedio = 0;
+
+          for(var i = 0; i < result.length;i++)
+          {  
+            console.log("-----------------");    
+            if(result[i].latitud == latitudActual && result[i].longitud == altitudActual)
+            {
+              console.log("Actual %d Concurrente %d",latitudActual,result[i].latitud);
+              sumatoria = sumatoria + result[i].co2;
+              concurrencia = concurrencia + 1;
+              
+              if(result[i].co2> cantidadMaxima)
+              {
+                cantidadMaxima = result[i].co2;
+                horaMaxima = result[i].fecha;
+              }
+              if(result[i].co2 < cantidadMinima)
+              {
+                cantidadMinima = result[i].co2;
+                horaMinima = result[i].fecha;
+              }   
+
+              
+              console.log("sumatoria" + sumatoria);
+              console.log(concurrencia);
+
+            }   
+            else
+            {
+
+                promedio = sumatoria / concurrencia;
+                console.log("Promedio: " +promedio);
+
+                var salud ='Altisimo';
+                
+                if (promedio < 350) 
+                {
+                      salud = "Nulo, el PPM de co2 es muy bajo. El aire es puro.";
+                      salud = salud + "Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima;
+                }
+                if (350< promedio && promedio< 450) 
+                {
+                      salud = "Casi nulo, el PPM de co2 es muy bajo, El aire es fresco.";
+                      salud = salud + "Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima;
+                }
+                if (450< promedio && promedio< 700) 
+                {
+                      salud = "Bajo, el PPM de co2 es  bajo. El aire está en condiciones normales.";
+                      salud = salud + "Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima;                      
+                }
+                if (700< promedio && promedio < 1000) 
+                {
+                      salud = "Medio, el PPM de co2 es poco. El aire está levemente contaminado.";
+                      salud = salud + "Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima;                      
+                }      
+                if (1000< promedio && promedio < 2500) 
+                {
+                      salud = "Medio alto, el PPM de co2 es alto. El aire está bastante contaminado. Evite pasar por allí.";
+                      salud = salud + "Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima;                      
+                }    
+                if (2500 < promedio && promedio < 5000) 
+                {
+                      salud = "Alto, el PPM de co2 está muy alto. Evite a toda costa pasar por allí.";
+                      salud = salud + "Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima;                      
+                }                                                          
+                global.pagina1 = global.pagina1 + '\tmarker = new google.maps.Marker({\n';
+                global.pagina1 = global.pagina1 + '\tposition: {lat:'+latitudActual+', lng: ' +altitudActual+'},\n';
+                global.pagina1 = global.pagina1 + '\tmap: map,';
+                global.pagina1 = global.pagina1 + '\ttitle: \' Cantidad de particulas Promedio de co2: ' + promedio + ' Riesgo para la salud: '+salud+ '\'\n';
+                global.pagina1 = global.pagina1 + '\t});\n';     
 
 
-          for(var i = 0; i < result.length;i++){
-            var salud ='Altisimo';
-            if (result[i].co2 < 350) 
-            {
-                  salud = "Nulo, el PPM de co2 es muy bajo. El aire es puro.";
+               cantidadMaxima = result[i].co2;
+               cantidadMinima = result[i].co2;
+               latitudActual = result[i].latitud;
+               altitudActual = result[i].longitud;
+               sumatoria = result[i].co2;
+               concurrencia = 1;
+               promedio = result[i].co2;                         
             }
-            if (350< result[i].co2 && result[i].co2< 450) 
-            {
-                  salud = "Casi nulo, el PPM de co2 es muy bajo, El aire es fresco.";
-            }
-            if (450< result[i].co2 && result[i].co2< 700) 
-            {
-                  salud = "Bajo, el PPM de co2 es  bajo. El aire está en condiciones normales.";
-            }
-            if (700< result[i].co2 && result[i].co2 < 1000) 
-            {
-                  salud = "Medio, el PPM de co2 es poco. El aire está levemente contaminado.";
-            }      
-            if (1000< result[i].co2 && result[i].co2 < 2500) 
-            {
-                  salud = "Medio alto, el PPM de co2 es alto. El aire está bastante contaminado. Evite pasar por allí.";
-            }    
-            if (2500 < result[i].co2 && result[i].co2 < 5000) 
-            {
-                  salud = "Alto, el PPM de co2 está muy alto. Evite a toda costa pasar por allí.";
-            }                                                          
-            global.pagina1 = global.pagina1 + '\tmarker = new google.maps.Marker({\n';
-            global.pagina1 = global.pagina1 + '\tposition: {lat:'+result[i].latitud+', lng: ' +result[i].longitud+'},\n';
-            global.pagina1 = global.pagina1 + '\tmap: map,';
-            global.pagina1 = global.pagina1 + '\ttitle: \' Cantidad de particulas de co2: ' + result[i].co2 + ' Riesgo para la salud: '+salud+ '\'\n';
-            global.pagina1 = global.pagina1 + '\t});\n';
+
           //console.log("Altitud " +result[1].latitud);
   //        res.send("Altitud " +result[1].latitud);
           }
