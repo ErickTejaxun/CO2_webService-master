@@ -174,7 +174,8 @@ var MongoClient = require('mongodb').MongoClient;
 global.pagina; //Delclaration of the global variable - undefined
 global.pagina1 = '<!--Inicio-->'; 
 global.pagina2 = '<!--Inicio-->'; 
-global.pagina3 = '<!--Inicio-->'; 
+global.pagina3 = '<!--Inicio-->';
+global.pagina4 = ''; 
 
 
 app.get('/analisis', function(req, res, next) {
@@ -330,7 +331,7 @@ app.get('/analisis', function(req, res, next) {
 
 
 
-
+// Parte 2
 
 
       filePath = path.join(__dirname, 'part2.html');
@@ -364,7 +365,172 @@ app.get('/analisis', function(req, res, next) {
           }
       });
 
- res.send(global.pagina1 + global.pagina2 + global.pagina3);
+
+
+
+
+// Parte 3 
+
+    MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      db.collection("aires").find({}, { _id: false }).toArray(function(err, result) {
+        if (err) throw err;
+          var horaMinima = "";
+          var horaMaxima = "";
+          var cantidadMaxima = 0;
+          var cantidadMinima = 0;
+          var latitudActual = 0;
+          var altitudActual = 0;
+          var sumatoria = 1;
+          var concurrencia = 1;
+          var promedio = 0;
+
+          for(var i = 0; i < result.length;i++)
+          {  
+            console.log("-----------------");    
+            if(result[i].latitud == latitudActual && result[i].longitud == altitudActual)
+            {
+              console.log("Actual %d Concurrente %d",latitudActual,result[i].latitud);
+              sumatoria = sumatoria + result[i].co2;
+              concurrencia = concurrencia + 1;
+              
+              if(result[i].co2> cantidadMaxima)
+              {
+                cantidadMaxima = result[i].co2;
+                horaMaxima = result[i].fecha;
+              }
+              if(result[i].co2 < cantidadMinima)
+              {
+                cantidadMinima = result[i].co2;
+                horaMinima = result[i].fecha;
+              }   
+
+              
+              console.log("sumatoria" + sumatoria);
+              console.log(concurrencia);
+
+            }   
+            else if(i>1)
+            {
+
+                promedio = sumatoria / concurrencia;
+                console.log("Promedio: " +promedio);
+
+                var salud ='Altisimo';
+                
+                if (promedio < 350) 
+                {
+                      salud = "<p>Nulo, el PPM de co2 es muy bajo. <br>El aire es puro.<br>";
+                      salud = salud + "Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "<br>Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima +'</p>';
+                }
+                if (350< promedio && promedio< 450) 
+                {
+                      salud = "<p>Casi nulo, el PPM de co2 es muy bajo, <br>El aire es fresco.<br>";
+                      salud = salud + "<br>Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "<br>Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima+'</p>';
+                }
+                if (450< promedio && promedio< 700) 
+                {
+                      salud = "<p>Bajo, el PPM de co2 es  bajo. El aire está en condiciones normales.";
+                      salud = salud + "Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima+'</p>';                      
+                }
+                if (700< promedio && promedio < 1000) 
+                {
+                      salud = "<p>Medio, el PPM de co2 es poco. <br>El aire está levemente contaminado.";
+                      salud = salud + "<br>Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "<br>Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima+'</p>';                      
+                }      
+                if (1000< promedio && promedio < 2500) 
+                {
+                      salud = "<p>Medio alto, el PPM de co2 es alto.<br> El aire está bastante contaminado. <br>Evite pasar por allí.";
+                      salud = salud + "<br>Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "<br>Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima+'</p>';                      
+                }    
+                if (2500 < promedio && promedio < 5000) 
+                {
+                      salud = "<p>Alto, el PPM de co2 está muy alto.<br> Evite a toda costa pasar por allí.";
+                      salud = salud + "<br>Hora de Mayor contaminacion: " +  horaMaxima + "Con un PPM de co2 de " + cantidadMaxima;
+                      salud = salud + "<br>Hora de Menor contaminacion: " +  horaMinima + "Con un PPM de co2 de " + cantidadMinima+'</p>';                      
+                }                
+
+
+
+              global.pagina4 = global.pagina4 +          '<tr>\n';
+              global.pagina4 = global.pagina4 +            '<th>Latitud</th>\n';
+              global.pagina4 = global.pagina4 +            '<th>'+latitudActual+'</th>\n';
+              global.pagina4 = global.pagina4 +          '</tr>\n';
+              global.pagina4 = global.pagina4 +          '<tr>\n';
+              global.pagina4 = global.pagina4 +            '<th>Altitud</th>';
+              global.pagina4 = global.pagina4 +            '<th>'+altitudActual+'</th>\n';             
+              global.pagina4 = global.pagina4 +          '</tr>\n';
+              global.pagina4 = global.pagina4 +          '<tr>\n';
+              global.pagina4 = global.pagina4 +            '<th>Direccion</th>\n';
+              global.pagina4 = global.pagina4 +            '<th></th>\n';
+              global.pagina4 = global.pagina4 +          '</tr>\n';
+              global.pagina4 = global.pagina4 +          '<tr>\n';
+              global.pagina4 = global.pagina4 +            '<th>Cantidad Promedio de PPM CO</th>\n';
+              global.pagina4 = global.pagina4 +            '<th>'+promedio+'</th>\n';             
+              global.pagina4 = global.pagina4 +          '</tr>\n';
+              global.pagina4 = global.pagina4 +          '<tr>\n';
+              global.pagina4 = global.pagina4 +            '<th>Calidad del Aire</th>\n';
+              global.pagina4 = global.pagina4 +            '<th>'+salud+'</th>\n';
+              global.pagina4 = global.pagina4 +          '</tr>\n'; 
+               cantidadMaxima = result[i].co2;
+               cantidadMinima = result[i].co2;
+               latitudActual = result[i].latitud;
+               altitudActual = result[i].longitud;
+               sumatoria = result[i].co2;
+               concurrencia = 1;
+               promedio = result[i].co2;                         
+            }
+
+          //console.log("Altitud " +result[1].latitud);
+  //        res.send("Altitud " +result[1].latitud);
+          }
+        db.close();
+      });
+    });
+
+
+// Parte 4
+
+
+      filePath = path.join(__dirname, 'part3.html');
+
+      fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data4){
+          if (!err) {
+              global.pagina3 = data4;
+
+
+
+
+
+
+          var fs4 = require('fs');
+          var stream4 = fs4.createWriteStream("calidadaire.html");
+          stream4.once('open', function(fd) {
+            stream4.write(data4);
+            stream4.end();
+          });
+
+
+
+
+
+              //console.log('---------------\n: ' + global.pagina);
+              //response.writeHead(200, {'Content-Type': 'text/html'});
+              //res.send(data);
+              //response.end();
+          } else {
+              console.log(err);
+          }
+      });
+
+
+
+ res.send(global.pagina1 + global.pagina2 + global.pagina4 +global.pagina3);
 
 
 });
