@@ -1,91 +1,91 @@
-          var marker = new google.maps.Marker({
-            position: inicio,
-            map: map,
-            title: 'Cantidad de particulas de co2: 298 \n Riesgo para la salud: Bajo.'
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Calidad del Aire</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ </head>
+  <body style="background-color:#fff">
+
+
+<nav class="navbar navbar navbar-fixed-top ">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a  href="index.jsp">
+                <!--<img alt="logo" src="img/logo2.png" >-->
+            </a>
+        </div>
+
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/">Inicio</a></li>
+            <li class="active"><a href="analisis">Analisis</a></li>
+            <li><a href="contacto">Conctacto</a></li>                            
+        </ul>    
+    </div>
+</nav>
+
+
+    <div class="row">
+        <div class="title col-md-12">
+            <h1 align="cente" style="text-decoration-color: red">Calidad del aire GT</h1>                   
+        </div>
+    </div>
+
+
+    <div id="map" style="col-lg-6">
+
+      <div class="col-lg-12 text-center">
+          <h2>Mapas</h2>
+          <hr class="star-light">
+      </div>
+    
+
+      <script>
+        var map;
+        function initMap() 
+        {
+
+
+            var inicio = {lat: 14.5925952, lng: -90.5493314};
+            var punto1 = {lat: 14.593950, lng: -90.551480};
+            var punto2 = {lat: 14.594978, lng: -90.552854};
+            var punto3 = {lat: 14.597665, lng: -90.556045};
+            var punto4 = {lat: 14.598994, lng: -90.5603797};
+            var punto5 = {lat: 14.598994, lng: -90.5603797};
+
+            map = new google.maps.Map(document.getElementById('map'), {
+            center: inicio,
+            //{lat: 14.5925952, lng: -90.5493314},
+            zoom: 15
           });
-
-
-          var marker = new google.maps.Marker({
-            position: punto1,
-            map: map,
-            title: 'Cantidad de particulas de co2: 200 \n Riesgo para la salud: Bajo.'
-          });
-          var marker = new google.maps.Marker({
-            position: punto2,
-            map: map,
-            title: 'Cantidad de particulas de co2: 200 \n Riesgo para la salud: Bajo.'
-          });
-          var marker = new google.maps.Marker({
-            position: punto2,
-            map: map,
-            title: 'Cantidad de particulas de co2: 200 \n Riesgo para la salud: Bajo.'
-          });
-          var marker = new google.maps.Marker({
-            position: punto3,
-            map: map,
-            title: 'Cantidad de particulas de co2: 200 \n Riesgo para la salud: Bajo.'
-          });
-          var marker = new google.maps.Marker({
-            position: punto4,
-            map: map,
-            title: 'Cantidad de particulas de co2: 200 \n Riesgo para la salud: Bajo.'
-          });                                        
-          var marker = new google.maps.Marker({
-            position: punto5,
-            map: map,
-            title: 'Cantidad de particulas de co2: 200 \n Riesgo para la salud: Bajo.'
-          });                                        
-
-
-
-        }
-
-
 
 
 
   
-    </script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWKvSgP5jErhKKNcsRVZjEDTkSKmmAAC0&callback=initMap"
-      async defer></script>      
-   </div>
-
-
-
-<!--   
-
-      <script src="https://maps.googleapis.com/maps/api/js"></script>
-      <input type="button" id="routebtn" value="route" />
-      <div id="map-canvas">
-
-
-   </script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWKvSgP5jErhKKNcsRVZjEDTkSKmmAAC0&callback=initMap"
-      async defer></script>
-    </div>  
--->
-
-<div id="map" style="row">
-
-        <div class="col-lg-12 text-center">
-          <h2>Punto Seleccionado</h2>
-          <hr class="star-light">
-        </div>
-
-
-        <table style="width:100%">
-          <tr>
-            <th>Latitud</th>
-            <th>14.5878192</th>             
-          </tr>
-          <tr>
-            <th>Altitud</th>
-            <th>-90.5493314</th>             
-          </tr>
-          <tr>
-            <th>Direccion</th>
-            <th>Universidad de San Carlos de Guatemala</th>             
-          </tr>                    
           <tr>
             <th>Cantidad de particulas promedios de CO:</th>
             <th>298</th>             

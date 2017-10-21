@@ -177,7 +177,7 @@ global.pagina2 = '<!--Inicio-->';
 global.pagina3 = '<!--Inicio-->'; 
 
 
-app.get('/parseo', function(req, res, next) {
+app.get('/analisis', function(req, res, next) {
 
 
    
